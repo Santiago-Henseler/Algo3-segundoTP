@@ -1,7 +1,8 @@
-(ns tp2.core
-  (:gen-class))
+(ns tp2.core (:gen-class))
+(require '[tp2.sistemaL :as sistemaL])
+
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (sistemaL/openFile )
+)
