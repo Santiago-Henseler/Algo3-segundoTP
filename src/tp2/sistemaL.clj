@@ -2,8 +2,8 @@
 (use 'clojure.java.io)
 
 (defn openFile 
-    []
-    (with-open [rdr (reader "/d/arbol1.sl")]
+    [x]
+    (with-open [rdr (reader (str "doc/" x))]
         (doseq [line (line-seq rdr)]
             (println line)))    
 )
