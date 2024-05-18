@@ -4,6 +4,6 @@
 (defn openFile 
     [x]
     (with-open [rdr (reader (str "doc/" x))]
-        (doseq [line (line-seq rdr)]
-            (println line)))    
+        (reduce conj [] (line-seq rdr)) ;; Crear lista de lineas
+    )    
 )
