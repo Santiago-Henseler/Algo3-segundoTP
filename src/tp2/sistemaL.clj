@@ -5,11 +5,14 @@
 (defn make-vec
   "Reemplaza el vector por las reglas"
   [reglas vector]
+    (println vector)
   (let [
        nilVec '() 
        newVec (for [x (range 0 (count vector))] 
-         (conj nilVec (reglas ((vec vector) x)))
-       )]
+        (if (contains? reglas ((vec vector) x))
+        (flatten(first (conj nilVec (apply list (str/split(reglas ((vec vector) x))#"")))))
+        (conj nilVec ((vec vector) x))
+       ))]
     newVec
   )
 )
@@ -17,9 +20,8 @@
 (defn iter
   "Itera i veces"
   [reglas i vector]
-  (println vector)
   (if (> i 1)
-    (iter reglas (- i 1) (make-vec reglas vector))
+    (iter reglas (- i 1) (flatten(make-vec reglas vector)))
     vector
     ) 
 )
