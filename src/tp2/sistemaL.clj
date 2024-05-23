@@ -1,26 +1,17 @@
 (ns tp2.sistemaL (:gen-class))
 (use 'clojure.java.io)
 (require '[clojure.string :as str])
+(require '[tp2.svgMaker :as svgMaker])
 
 (defn make-vec
-  "Reemplaza el vector por las reglas"
   [reglas vector]
-    (println vector)
-  (let [
-       nilVec '() 
-       newVec (for [x (range 0 (count vector))] 
-        (if (contains? reglas ((vec vector) x))
-        (flatten(first (conj nilVec (apply list (str/split(reglas ((vec vector) x))#"")))))
-        (conj nilVec ((vec vector) x))
-       ))]
-    newVec
-  )
+  (map #(if (contains? reglas %) (list (str/split(reglas %)#"")) (list %)) (vec vector))
 )
 
 (defn iter
   "Itera i veces"
   [reglas i vector]
-  (if (> i 1)
+  (if (> i 0)
     (iter reglas (- i 1) (flatten(make-vec reglas vector)))
     vector
     ) 
@@ -47,6 +38,6 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-    (println (iter (reglas-dicc reglas) i (list axioma)))
+    (print (iter (reglas-dicc reglas) i (list axioma)))
     )
   )
