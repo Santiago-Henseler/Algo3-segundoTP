@@ -4,8 +4,9 @@
 (require '[tp2.svgMaker :as svgMaker])
 
 (defn make-vec
+  "Expande el vector con las reglas"
   [reglas vector]
-  (map #(if (contains? reglas %) (list (str/split(reglas %)#"")) (list %)) (vec vector))
+  (map #(if (contains? reglas %) (list (str/split(reglas %)#"")) (list %)) vector)
 )
 
 (defn iter
@@ -38,6 +39,6 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-    (print (iter (reglas-dicc reglas) i (list axioma)))
+    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) angulo)
     )
   )
