@@ -29,6 +29,7 @@
   ) 
 )
 
+;; Generosidad de https://stackoverflow.com/questions/5621279/in-clojure-how-can-i-convert-a-string-to-a-number
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
 

@@ -54,9 +54,11 @@
           } ) 
         ) 
         ;; Siguiente elemento en formula, quitamos elemento con angulo anterior y agregamos mismo elemento - angulo
-      ) (       ;; Else
+      ) (       
+        ;; Else
         ( println "DEBUG 6 LILT")  
-        ( println formula)   
+        ( println formula)  
+        ( println pila) 
         ( println "DEBUG 7 LILT")
 ;;        ( str "L " (nth ( vector '(+ (nth (peek pila) 0) (* (math/cos angulo) 100)) '(+ (nth (peek pila) 1) (* (* (math/sin angulo) 100) -1)) ) 0) " " (nth ( vector '(+ (nth (peek pila) 0) (* (math/cos angulo) 100)) '(+ (nth (peek pila) 1) (* (* (math/sin angulo) 100) -1)) ) 1) " " (lineInLine_Testa  (next formula) angulo pila ) )   
         ( str "L " 
@@ -71,8 +73,12 @@
         )
       ))))
     ) 
-    ( str nil )
+    ( str nil ) 
   )
+)
+
+(defn grados-a-radianes [angulo] 
+  ( / (* angulo Math/PI ) 180)
 )
 
 (defn writeSvg [expresions angulo salida] 
