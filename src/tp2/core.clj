@@ -1,5 +1,6 @@
 (ns tp2.core (:gen-class))
 (require '[tp2.sistemaL :as sistemaL])
+(require '[tp2.svgMaker :as svgMaker])
 
 
 (defn -main [& args]
@@ -12,7 +13,7 @@
         salida (argumentos 2) 
    ]
       ;; Parseo de archivo   
-     (sistemaL/openFile entrada iteraciones)
+     (sistemaL/openFile entrada iteraciones salida)
    )
    
   ( println "Uso: lein run [archivo_entrada.sl] [cant_iteraciones] [archivo_salida.svg]") )

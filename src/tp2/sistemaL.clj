@@ -30,7 +30,7 @@
 )
 
 (defn openFile
-  [file i]
+  [file i salida]
   (let [
         archivo (with-open [rdr (reader (str "doc/" file))] 
                   (reduce conj [] (line-seq rdr)) ;; Crear lista de lineas
@@ -39,6 +39,6 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) angulo)
+    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) angulo salida)
     )
   )
