@@ -29,6 +29,9 @@
   ) 
 )
 
+(defn parse-int [s]
+   (Integer. (re-find  #"\d+" s )))
+
 (defn openFile
   [file i salida]
   (let [
@@ -39,6 +42,6 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) angulo salida)
+    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) (parse-int angulo) salida)
     )
   )
