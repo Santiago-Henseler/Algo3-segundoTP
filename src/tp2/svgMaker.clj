@@ -23,45 +23,33 @@
   ( if (not (empty? formula)) (   
       if (= (get (first formula) 0) (char 91)) (    ;; Esto es un gran if else if else if else ...
         ;; Agregamos a la pila el mismo elemento que tenemos antes
-        ( println "DEBUG 2 LILT")
-        ( lineInLine_Testa (next formula) angulo (conj pila (peek pila)) )  
+        lineInLine_Testa (next formula) angulo (conj pila (peek pila))  
       ) ( 
       if (= (first formula) "]") (
-        ( println "DEBUG 3 LILT")
-        ( str "M " 
+         str "M " 
           ((peek (pop pila)) :x) " " 
           ((peek (pop pila)) :y) " " 
           (lineInLine_Testa  (next formula) angulo (pop pila) ) " "
-        ) 
         ;; Quitar tortuga y escribir linea con pluma levantada para volver a punto inicial 
       ) (
       if (= (first formula) "+") (
-        ( println "DEBUG 4 LILT")
-        ( lineInLine_Testa (next formula) angulo (conj (pop pila) {
+         lineInLine_Testa (next formula) angulo (conj (pop pila) {
           :x ((peek pila) :x), 
           :y ((peek pila) :y), 
           :a (+ ((peek pila) :a) angulo) 
-          } ) 
-        ) 
+          } )  
         ;; Siguiente elemento en formula, quitamos elemento con angulo anterior y agregamos mismo elemento + angulo
       ) (
       if (= (first formula) "-") (
-        ( println "DEBUG 5 LILT")        
-        ( lineInLine_Testa (next formula) angulo (conj (pop pila) {
+         lineInLine_Testa (next formula) angulo (conj (pop pila) {
           :x ((peek pila) :x), 
           :y ((peek pila) :y), 
           :a (- ((peek pila) :a) angulo) 
           } ) 
-        ) 
         ;; Siguiente elemento en formula, quitamos elemento con angulo anterior y agregamos mismo elemento - angulo
       ) (       
         ;; Else
-        ( println "DEBUG 6 LILT")  
-        ( println formula)  
-        ( println pila) 
-        ( println "DEBUG 7 LILT")
-;;        ( str "L " (nth ( vector '(+ (nth (peek pila) 0) (* (math/cos angulo) 100)) '(+ (nth (peek pila) 1) (* (* (math/sin angulo) 100) -1)) ) 0) " " (nth ( vector '(+ (nth (peek pila) 0) (* (math/cos angulo) 100)) '(+ (nth (peek pila) 1) (* (* (math/sin angulo) 100) -1)) ) 1) " " (lineInLine_Testa  (next formula) angulo pila ) )   
-        ( str "L " 
+         str "L " 
           (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 100)) " " 
           (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -100)) " " 
           ( lineInLine_Testa  (next formula) angulo (conj (pop pila) { 
@@ -70,7 +58,7 @@
             :a (get (peek pila) :a)
             })
           ) " "  
-        )
+        
       ))))
     ) 
     ( str nil ) 
