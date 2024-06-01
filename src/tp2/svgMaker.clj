@@ -87,11 +87,11 @@
 ))))))
 
 (defn procesar_salida [pila elemento] (
-  if (= (get elemento 0) "]") (
+  if (= (get elemento 0) (char 93))(
     str "M " 
       ((peek (pop pila)) :x) " " 
       ((peek (pop pila)) :y) " " 
-  ) ( if (and (not= elemento "+") (not= elemento "-") (not= elemento "[")) (
+  ) ( if (and (not= (get elemento 0) (char 43)) (not= (get elemento 0) (char 45)) (not= (get elemento 0) (char 91))) (
     str "L "
     (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10)) " "
     (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10)) " "                        
