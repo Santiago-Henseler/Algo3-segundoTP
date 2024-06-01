@@ -106,7 +106,7 @@
   [formula angulo]
   ( 
     loop [formula_mut formula
-          pila (list {:x 10, :y 250, :a 0})
+          pila (list {:x 10, :y (* 5 (count formula)), :a 0})
           salida (str nil)]
     (
       if (not (empty? formula_mut)) 
@@ -151,10 +151,11 @@
 ;;)))
 
 (defn writeSvg [expresions angulo salida] 
-  (spit salida "<svg viewBox=\"0 0 1000 1000\" xmlns=\"http://www.w3.org/2000/svg\">")
+  (spit salida (str "<svg viewBox=\"0 0 " (* 5 (count expresions)) " " (* 10 (count expresions)) (char 34) " xmlns=\"http://www.w3.org/2000/svg\">"))
+  (println expresions)
 ;;  (spit salida (str "<path d=\"M 10 250" (str (lineInLine_Testa expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)})) (char 34)) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true) 
 ;;  (spit salida (str "<path d=\"M 10 250" (str (lineInLine_Testa2 expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)})) (char 34)) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true) 
 ;;  (spit salida (str "<path d=\"M 10 250 " ( iter_svg 0 expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)}) (str nil) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
-  (spit salida (str "<path d=\"M 10 250 " ( loop_svg expresions ( grados-a-radianes angulo ) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
+  (spit salida (str "<path d=\"M 10 " (str (* 5 (count expresions)) " ") ( loop_svg expresions ( grados-a-radianes angulo ) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
   (spit salida "</svg>" :append true)
 )

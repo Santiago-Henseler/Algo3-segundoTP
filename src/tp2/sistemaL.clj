@@ -43,7 +43,10 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-
-    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) (parse-int angulo) salida)
+    (
+      do
+      (println axioma)
+      (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo) salida)
+    )
     )
   )
