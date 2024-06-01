@@ -68,21 +68,21 @@
 )
 
 (defn procesar_pila [angulo pila elemento] (
-  if (= (get elemento 0) "[") (conj pila (peek pila)) (
-  if (= (get elemento 0) "]") (pop pila) (
-  if (= (get elemento 0) "+") (conj (pop pila) {
+  if (= (get elemento 0) (char 91)) (conj pila (peek pila)) (   ;; [ -> Agregar otra tortuga
+  if (= (get elemento 0) (char 93)) (pop pila) (                ;; ] -> Quitar tortuga
+  if (= (get elemento 0) (char 43)) (conj (pop pila) {          ;; + -> Agregar map con :a + angulo
     :x ((peek pila) :x), 
     :y ((peek pila) :y), 
     :a (+ ((peek pila) :a) angulo) 
     } ) (
-  if (= (get elemento 0) "-") (conj (pop pila) {
+  if (= (get elemento 0) (char 45)) (conj (pop pila) {          ;; - -> Agregar map con :a + angulo
     :x ((peek pila) :x), 
     :y ((peek pila) :y), 
     :a (- ((peek pila) :a) angulo) 
-    } ) ( conj (pop pila) { 
+    } ) ( conj (pop pila) {                                     ;; Agregar a pila posición nueva  
     :x (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10)), 
     :y (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10)), 
-    :a (get (peek pila) :a)
+    :a ((peek pila) :a)
     } 
 ))))))
 
@@ -91,10 +91,11 @@
     str "M " 
       ((peek (pop pila)) :x) " " 
       ((peek (pop pila)) :y) " " 
-  ) (
+  ) ( if (and (not= elemento "+") (not= elemento "-") (not= elemento "[")) (
     str "L "
-    (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10)) " " 
-    (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10)) " " 
+    (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10)) " "
+    (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10)) " "                        
+  ) ( str nil )
 )))
 
 (defn grados-a-radianes [angulo] 
@@ -104,10 +105,15 @@
 (defn loop_svg 
   [formula angulo]
   ( 
-    loop [i 0 pila (procesar_pila angulo (list {:x 10, :y 250, :a (grados-a-radianes 0)}) (get formula 0)) salida (str nil)]
+    loop [formula_mut formula
+          pila (list {:x 10, :y 250, :a 0})
+          salida (str nil)]
     (
-      if (< i (count formula)) 
-        ( recur (+ i 1) (procesar_pila angulo pila (get formula i)) (str salida (procesar_salida pila (get formula i) )))
+      if (not (empty? formula_mut)) 
+        ( recur (next formula_mut)                                         
+                (procesar_pila angulo pila (first formula_mut))
+                (str salida (procesar_salida pila (first formula_mut)))
+        )
         salida
     )
   )
@@ -151,5 +157,4 @@
 ;;  (spit salida (str "<path d=\"M 10 250 " ( iter_svg 0 expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)}) (str nil) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
   (spit salida (str "<path d=\"M 10 250 " ( loop_svg expresions ( grados-a-radianes angulo ) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
   (spit salida "</svg>" :append true)
-
 )
