@@ -67,7 +67,7 @@
   )
 )
 
-(defn procesar_pila [angulo pila elemento] (
+(defn procesarPila [angulo pila elemento] (
   if (= (get elemento 0) (char 91)) (conj pila (peek pila)) (   ;; [ -> Agregar otra tortuga
   if (= (get elemento 0) (char 93)) (pop pila) (                ;; ] -> Quitar tortuga
   if (= (get elemento 0) (char 43)) (conj (pop pila) {          ;; + -> Agregar map con :a + angulo
@@ -86,7 +86,7 @@
     } 
 ))))))
 
-(defn procesar_salida [pila elemento] (
+(defn procesarSalida [pila elemento] (
   if (= (get elemento 0) (char 93))(
     str "M " 
       ((peek (pop pila)) :x) " " 
@@ -111,8 +111,40 @@
     (
       if (not (empty? formula_mut)) 
         ( recur (next formula_mut)                                         
-                (procesar_pila angulo pila (first formula_mut))
-                (str salida (procesar_salida pila (first formula_mut)))
+                (procesarPila angulo pila (first formula_mut))
+                (str salida (procesarSalida pila (first formula_mut)))
+        )
+        salida
+    )
+  )
+)
+
+(defn procesarFormulaSalida [pila elemento] (
+  if (= (get elemento 0) (char 93))
+    [ ;; Devolver vector con posicion de nuevo punto y 0 ( no se escribe )
+      (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10))
+      (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10))
+      0                        
+    ]
+    ( if (and (not= (get elemento 0) (char 43)) (not= (get elemento 0) (char 45)) (not= (get elemento 0) (char 91))) 
+    [
+      (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10))
+      (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10))
+      1                        
+    ]
+    [ 0 0 0 ] ;; Volver a punto inicial sin escribir
+)))
+
+(defn procesarFormula 
+  [formula angulo] (
+    loop [formula_mut formula
+          pila (list {:x 10, :y 0, :a 0})
+          salida (list [0 0 0])]
+    (
+      if (not (empty? formula_mut)) 
+        ( recur (next formula_mut)                                         
+                (procesarPila angulo pila (first formula_mut))
+                (conj salida (procesarFormulaSalida pila (first formula_mut)))
         )
         salida
     )
@@ -152,10 +184,39 @@
 
 (defn writeSvg [expresions angulo salida] 
   (spit salida (str "<svg viewBox=\"0 0 " (* 5 (count expresions)) " " (* 10 (count expresions)) (char 34) " xmlns=\"http://www.w3.org/2000/svg\">"))
-  (println expresions)
+;;  (println expresions)
 ;;  (spit salida (str "<path d=\"M 10 250" (str (lineInLine_Testa expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)})) (char 34)) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true) 
 ;;  (spit salida (str "<path d=\"M 10 250" (str (lineInLine_Testa2 expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)})) (char 34)) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true) 
 ;;  (spit salida (str "<path d=\"M 10 250 " ( iter_svg 0 expresions (grados-a-radianes angulo) (list {:x 10, :y 250, :a (grados-a-radianes 0)}) (str nil) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
-  (spit salida (str "<path d=\"M 10 " (str (* 5 (count expresions)) " ") ( loop_svg expresions ( grados-a-radianes angulo ) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
+  (spit salida (str "<path d=\"M 10 0" ( loop_svg expresions ( grados-a-radianes angulo ) ) (char 34) " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>") :append true)
+  (spit salida "</svg>" :append true)
+)
+
+(defn encontrarMinimo [arg1 arg2](
+  if ( < arg1 arg2 ) arg1 arg2 
+))
+
+(defn encontrarMaximo [arg1 arg2](
+  if ( > arg1 arg2 ) arg1 arg2 
+))
+
+(defn procesarLinea 
+  [punto](
+  str (if (= (get punto 2) 0) (str "M ") (str "L "))  (get punto 0) " " (get punto 1) " "
+))
+
+(defn !escribirSVG 
+  ;; Pre: Lista de vectores de puntos del fractal y archivo de salida valido
+  ;; Post: Escribe archivo de salida 
+  [ expresiones salida ]
+;;  (println expresiones)
+;;  (println salida)
+  (spit salida (str "<svg viewBox=" 
+    (reduce encontrarMinimo (map first  expresiones)) " "
+    (reduce encontrarMinimo (map second expresiones)) " "
+    (reduce encontrarMaximo (map first  expresiones)) " "
+    (reduce encontrarMaximo (map second expresiones)) " "
+    (char 34) " xmlns=\"http://www.w3.org/2000/svg\">"))
+  (spit salida (str "<path d=" ( map procesarLinea expresiones )) :append true)
   (spit salida "</svg>" :append true)
 )

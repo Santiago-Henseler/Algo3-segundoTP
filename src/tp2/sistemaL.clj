@@ -12,7 +12,7 @@
 (defn filtrado
   "Elimina los elementos que no pertenecen a las reglas"
   [reglas vector]
-  (println vector)
+;;  (println vector)
   (filter #(contains? reglas %) vector)
 )
 
@@ -40,7 +40,7 @@
 (defn parse-int [s]
    (Integer. (re-find  #"\d+" s )))
 
-(defn openFile
+(defn !openFile ;; no determinista. Abre y lee archivo 
   [file i salida]
   (let [
         archivo (with-open [rdr (reader (str "doc/" file))] 
@@ -50,6 +50,16 @@
         axioma (archivo 1) 
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
-      (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo) salida)
-    )
+      (svgMaker/!escribirSVG (svgMaker/procesarFormula (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo)) salida)
+;;      (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo) salida)
   )
+)
+
+(defn !abrirArchivo 
+  ;; Pre: Archivo valido
+  ;; Post: [angulo axioma [reglas]]
+  [archivo] (
+    let [ lineas (with-open [rdr (reader (str "doc/" archivo))] 
+                    (reduce conj [] (line-seq rdr))) ;; Crear lista de lineas
+    ] (vector (lineas 0) (lineas 1) (subvec lineas 2))
+))
