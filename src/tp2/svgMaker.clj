@@ -202,8 +202,13 @@
 
 (defn procesarLinea 
   [punto](
-  str (if (= (get punto 2) 0) (str "M ") (str "L "))  (get punto 0) " " (get punto 1) " "
+  str (if (= (get punto 2) 0) (str "M ") (str "L ")) (get punto 0) " " (get punto 1) " "
 ))
+
+(defn procesarLinea2 
+  [ minimoX minimoY punto]
+  (str (if (= (get punto 2) 0) (str "M ") (str "L ")) (- (get punto 0) minimoX) " " (- (get punto 1) minimoY) " ")
+)
 
 (defn !escribirSVG 
   ;; Pre: Lista de vectores de puntos del fractal y archivo de salida valido
@@ -211,12 +216,34 @@
   [ expresiones salida ]
 ;;  (println expresiones)
 ;;  (println salida)
-  (spit salida (str "<svg viewBox=" 
+  (spit salida (str "<svg viewBox=\""
     (reduce encontrarMinimo (map first  expresiones)) " "
     (reduce encontrarMinimo (map second expresiones)) " "
     (reduce encontrarMaximo (map first  expresiones)) " "
     (reduce encontrarMaximo (map second expresiones)) " "
-    (char 34) " xmlns=\"http://www.w3.org/2000/svg\">"))
-  (spit salida (str "<path d=" ( map procesarLinea expresiones )) :append true)
+    "\" xmlns=\"http://www.w3.org/2000/svg\">"))
+;;  (println (map procesarLinea expresiones) )
+  (spit salida (str "<path d=\""  (apply str ( map procesarLinea expresiones )) "\""
+    " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>" ) :append true)
+  (spit salida "</svg>" :append true)
+)
+
+(defn !escribirSVG2 
+  ;; Pre: Lista de vectores de puntos del fractal y archivo de salida valido
+  ;; Post: Escribe archivo de salida 
+  [ expresiones salida ]
+;;  (println expresiones)
+;;  (println salida)
+
+  (spit salida (str "<svg viewBox=\" 0 0 "
+    (- (reduce encontrarMaximo (map first  expresiones)) (reduce encontrarMinimo (map first  expresiones))) " "
+    (- (reduce encontrarMaximo (map second expresiones)) (reduce encontrarMinimo (map second expresiones))) " "
+    "\" xmlns=\"http://www.w3.org/2000/svg\">"))
+  (println (map procesarLinea expresiones) )
+  (spit salida (str "<path d=\"" (apply str ( map 
+    (partial procesarLinea2 (reduce encontrarMinimo (map first  expresiones)) (reduce encontrarMinimo (map second  expresiones))) 
+      expresiones ))
+    "\" stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>" ) :append true )
+
   (spit salida "</svg>" :append true)
 )

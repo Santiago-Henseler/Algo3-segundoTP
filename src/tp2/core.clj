@@ -20,7 +20,7 @@
       reglas (lineas 2)      
     ] 
 ;;    (sistemaL/!openFile entrada iteraciones salida) ;; Parseo de archivo   
-    (svgMaker/!escribirSVG (
+    (svgMaker/!escribirSVG2 (
       svgMaker/procesarFormula (
         sistemaL/iter (sistemaL/reglas-dicc reglas) iteraciones (list (str/split axioma #""))) angulo) 
     salida)
