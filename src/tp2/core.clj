@@ -15,7 +15,7 @@
 
       ;; Parseo de archivo 
       lineas (sistemaL/!abrirArchivo entrada)
-      angulo (Integer/parseInt (lineas 0))
+      angulo (svgMaker/grados-a-radianes (Integer/parseInt (lineas 0)))
       axioma (lineas 1)
       reglas (lineas 2)      
     ] 
