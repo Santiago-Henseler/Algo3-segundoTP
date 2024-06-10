@@ -20,10 +20,10 @@
       reglas (lineas 2)      
     ] 
 ;;    (sistemaL/!openFile entrada iteraciones salida) ;; Parseo de archivo   
-    (svgMaker/!escribirSVG (
+    (svgMaker/!escribirSVG ( reverse (
       svgMaker/procesarFormula (
-        sistemaL/iter (sistemaL/reglas-dicc reglas) iteraciones (list (str/split axioma #""))) angulo) 
-    salida)
+        sistemaL/iter (sistemaL/reglas-dicc reglas) iteraciones (list (str/split axioma #""))) angulo ) ) 
+    salida )
 
   )
   ( println "Uso: lein run [archivo_entrada.sl] [cant_iteraciones] [archivo_salida.svg]") 
