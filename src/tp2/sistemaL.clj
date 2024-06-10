@@ -9,12 +9,18 @@
   (map #(if (contains? reglas %) (list (str/split(reglas %)#"")) (list %)) vector)
 )
 
+(defn filtrado
+  "Elimina los elementos que no pertenecen a las reglas"
+  [reglas vector]
+  (filter #(contains? reglas %) vector)
+)
+
 (defn iter
   "Itera i veces"
   [reglas i vector]
   (if (> i 0)
     (iter reglas (- i 1) (flatten(make-vec reglas vector)))
-    vector
+    (filtrado reglas vector)
     ) 
 )
 
@@ -25,7 +31,7 @@
        reglasVec (for [x (range 0 (count reglas))]
                     (conj (str/split (reglas x) #" ")))
        ]
-    (apply hash-map (flatten reglasVec))
+    (merge (apply hash-map (flatten reglasVec)) {"-" "-", "+" "+", "]" "]", "[" "["} )
   ) 
 )
 
@@ -44,6 +50,6 @@
         reglas (subvec archivo 2);; Vector con las lineas.
         ]
 
-    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list axioma)) (parse-int angulo) salida)
+    (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo) salida)
     )
   )
