@@ -120,31 +120,37 @@
 )
 
 (defn procesarFormulaSalida [pila elemento] (
-  if (= (get elemento 0) (char 93))
-    [ ;; Devolver vector con posicion de nuevo punto y 0 ( no se escribe )
+  if (= (get elemento 0) (char 93))   ;; "]" desapilar tortuga 
+    ( 
+      ;; Devolver vector con posicion de nuevo punto 
+      vector
       (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10))
       (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10))
       0                        
-    ]
+    )
     ( if (and (not= (get elemento 0) (char 43)) (not= (get elemento 0) (char 45)) (not= (get elemento 0) (char 91))) 
-    [
+    ;; No es "+" ni "-" ni 
+    (
+      vector 
       (+ ((peek pila) :x) (* (Math/cos ((peek pila) :a)) 10))
       (+ ((peek pila) :y) (* (Math/sin ((peek pila) :a)) -10))
       1                        
-    ]
-    [ 0 0 0 ] ;; Volver a punto inicial sin escribir
+    ) ;; Volver a punto inicial sin escribir
 )))
 
 (defn procesarFormula 
   [formula angulo] (
     loop [formula_mut formula
           pila (list {:x 10, :y 0, :a 0})
-          salida (list [0 0 0])]
+          salida (list [10 0 0])]
     (
       if (not (empty? formula_mut)) 
         ( recur (next formula_mut)                                         
                 (procesarPila angulo pila (first formula_mut))
-                (conj salida (procesarFormulaSalida pila (first formula_mut)))
+                ( if (nil? (procesarFormulaSalida pila (first formula_mut)) )
+                  salida 
+                  (conj salida (procesarFormulaSalida pila (first formula_mut)))
+                )
         )
         salida
     )
@@ -221,8 +227,9 @@
     (reduce encontrarMinimo (map second expresiones)) " "
     (reduce encontrarMaximo (map first  expresiones)) " "
     (reduce encontrarMaximo (map second expresiones)) " "
-    "\" xmlns=\"http://www.w3.org/2000/svg\">"))
-;;  (println (map procesarLinea expresiones) )
+    "\" xmlns=\"http://www.w3.org/2000/svg\" 
+    preserveAspectRatio=\"xMidYMid meet\" width=\"100%\" height=\"100%\" style=\"overflow: visible;\" >"))
+  (println (map procesarLinea expresiones) )
   (spit salida (str "<path d=\""  (apply str ( map procesarLinea expresiones )) "\""
     " stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>" ) :append true)
   (spit salida "</svg>" :append true)
@@ -232,7 +239,7 @@
   ;; Pre: Lista de vectores de puntos del fractal y archivo de salida valido
   ;; Post: Escribe archivo de salida 
   [ expresiones salida ]
-;;  (println expresiones)
+ (println expresiones)
 ;;  (println salida)
 
   (spit salida (str "<svg viewBox=\" 0 0 "
