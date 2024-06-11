@@ -1,7 +1,6 @@
 (ns tp2.sistemaL (:gen-class))
 (use 'clojure.java.io)
 (require '[clojure.string :as str])
-(require '[tp2.svgMaker :as svgMaker])
 
 (defn make-vec
   "Expande el vector con las reglas"
@@ -34,25 +33,6 @@
        ]
     (merge (apply hash-map (flatten reglasVec)) {"-" "-", "+" "+", "]" "]", "[" "["} )
   ) 
-)
-
-;; Generosidad de https://stackoverflow.com/questions/5621279/in-clojure-how-can-i-convert-a-string-to-a-number
-(defn parse-int [s]
-   (Integer. (re-find  #"\d+" s )))
-
-(defn !openFile ;; no determinista. Abre y lee archivo 
-  [file i salida]
-  (let [
-        archivo (with-open [rdr (reader (str "doc/" file))] 
-                  (reduce conj [] (line-seq rdr)) ;; Crear lista de lineas
-                  )
-        angulo (archivo 0)
-        axioma (archivo 1) 
-        reglas (subvec archivo 2);; Vector con las lineas.
-        ]
-      (svgMaker/!escribirSVG (svgMaker/procesarFormula (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo)) salida)
-;;      (svgMaker/writeSvg (iter (reglas-dicc reglas) i (list (str/split axioma #""))) (parse-int angulo) salida)
-  )
 )
 
 (defn !abrirArchivo 
