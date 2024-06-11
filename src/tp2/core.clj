@@ -16,11 +16,10 @@
 
       ;; Parseo de archivo 
       lineas (sistemaL/!abrirArchivo entrada)
-      angulo (svgMaker/grados-a-radianes (Integer/parseInt (lineas 0)))
+      angulo (svgMaker/grados-a-radianes (Double/parseDouble (lineas 0)))
       axioma (lineas 1)
       reglas (lineas 2)      
-    ] 
-;;    (sistemaL/!openFile entrada iteraciones salida) ;; Parseo de archivo   
+    ]  
     (svgMaker/!escribirSVG ( reverse (
       svgMaker/procesarFormula (
         sistemaL/iter (sistemaL/reglas-dicc reglas) iteraciones (list (str/split axioma #""))) angulo ) ) 

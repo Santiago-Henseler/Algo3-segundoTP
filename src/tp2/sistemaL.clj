@@ -8,19 +8,12 @@
   (map #(if (contains? reglas %) (list (str/split(reglas %)#"")) (list %)) vector)
 )
 
-(defn filtrado
-  "Elimina los elementos que no pertenecen a las reglas"
-  [reglas vector]
-;;  (println vector)
-  (filter #(contains? reglas %) vector)
-)
-
 (defn iter
   "Itera i veces"
   [reglas i vector]
   (if (> i -1)
     (iter reglas (- i 1) (flatten(make-vec reglas vector)))
-    (filtrado reglas vector)
+    vector
     ) 
 )
 
