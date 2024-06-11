@@ -150,8 +150,36 @@
   (spit salida "</svg>" :append true)
 )
 
+(defn encontrarMinimoX [expresiones](
+  loop [minimo 0 expresiones_mut expresiones] (
+    if (empty? expresiones_mut ) minimo 
+    ( recur (min minimo (first (first expresiones_mut))) (next expresiones_mut) )
+  )
+))
+
+(defn encontrarMinimoY [expresiones](
+  loop [minimo 0 expresiones_mut expresiones] (
+    if (empty? expresiones_mut ) minimo 
+    ( recur (min minimo (second (first expresiones_mut))) (next expresiones_mut) )
+  )
+))
+
+(defn encontrarMaximoX [expresiones](
+  loop [maximo 0 expresiones_mut expresiones] (
+    if (empty? expresiones_mut ) maximo 
+    ( recur (max maximo (first (first expresiones_mut))) (next expresiones_mut) )
+  )
+))
+
+(defn encontrarMaximoY [expresiones](
+  loop [maximo 0 expresiones_mut expresiones] (
+    if (empty? expresiones_mut ) maximo 
+    ( recur (max maximo (second (first expresiones_mut))) (next expresiones_mut) )
+  )
+))
+
 (defn encontrarMinimo [arg1 arg2](
-  if ( < arg1 arg2 ) arg1 arg2 
+  if ( > arg1 arg2 ) arg1 arg2 
 ))
 
 (defn encontrarMaximo [arg1 arg2](
@@ -173,12 +201,17 @@
   ;; Post: Escribe archivo de salida 
   [ expresiones salida ]
 
-  
+;;  (println (map first  expresiones))
   (spit salida (str "<svg viewBox=\""
-    (-(reduce #(fn [n m] (min (first m) n)) expresiones)10) " "
-    (-(reduce #(fn [n m] (min (first m) n)) expresiones)10) " "
-    (+(reduce #(fn [n m] (min (first m) n)) expresiones)100) " "
-    (+(reduce #(fn [n m] (min (first m) n)) expresiones)100) " "
+    (-(encontrarMinimoX expresiones)10) " "
+    (-(encontrarMinimoY expresiones)10) " "
+    (+(- (encontrarMaximoX expresiones) (encontrarMinimoX expresiones))10) " "
+    (+(- (encontrarMaximoY expresiones) (encontrarMinimoY expresiones)) 10) " "
+
+;;    (-(reduce min (map first  expresiones))10) " "
+;;    (-(reduce min (map second expresiones))10) " "
+;;    (+(reduce max (map first  expresiones))10) " "
+;;    (+(reduce max (map second expresiones))10) " "
     "\" xmlns=\"http://www.w3.org/2000/svg\" 
     preserveAspectRatio=\"xMidYMid meet\" width=\"100%\" height=\"100%\" style=\"overflow: visible;\" >"))
 ;;  (println (map procesarLinea expresiones) )
