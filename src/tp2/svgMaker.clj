@@ -201,7 +201,7 @@
   ;; Post: Escribe archivo de salida 
   [ expresiones salida ]
 
-;;  (println (map first  expresiones))
+;;  (println expresiones )
   (spit salida (str "<svg viewBox=\""
     (-(encontrarMinimoX expresiones)10) " "
     (-(encontrarMinimoY expresiones)10) " "
@@ -225,7 +225,7 @@
   ;; Pre: Lista de vectores de puntos del fractal y archivo de salida valido
   ;; Post: Escribe archivo de salida 
   [ expresiones salida ]
- (println expresiones)
+;; (println expresiones)
 ;;  (println salida)
 
   (spit salida (str "<svg viewBox=\" 0 0 "

@@ -18,7 +18,7 @@
 (defn iter
   "Itera i veces"
   [reglas i vector]
-  (if (> i 0)
+  (if (> i -1)
     (iter reglas (- i 1) (flatten(make-vec reglas vector)))
     (filtrado reglas vector)
     ) 
