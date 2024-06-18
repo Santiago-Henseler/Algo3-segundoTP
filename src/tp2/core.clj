@@ -20,11 +20,9 @@
       axioma (lineas 1)
       reglas (lineas 2)      
     ]  
-    (svgMaker/!escribirSVG ( reverse (
-      svgMaker/procesarFormula (
+    (svgMaker/!escribirSVG ( reverse ( svgMaker/procesarFormula (
         sistemaL/iter (sistemaL/reglas-dicc reglas) iteraciones (list (str/split axioma #""))) angulo ) ) 
     salida )
-
   )
   ( println "Uso: lein run [archivo_entrada.sl] [cant_iteraciones] [archivo_salida.svg]") 
 ))
